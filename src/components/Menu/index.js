@@ -5,8 +5,10 @@ import css from './style.module.css';
 const Menu = () => (
     <div>
         <ul className={css.Menu}>
-            <MenuItem>ZAHIALGA </MenuItem>
-            <MenuItem>TULBUR </MenuItem>
+            <MenuItem exact link="/">
+                ШИНЭ ЗАХИАЛГА{' '}
+            </MenuItem>
+            <MenuItem link="/orders">ЗАХИАЛГУУД </MenuItem>
         </ul>
     </div>
 );

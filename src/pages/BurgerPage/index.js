@@ -3,6 +3,8 @@ import Burger from '../../components/Burger';
 import { BuildControls } from '../../components/buildControls';
 import Modal from '../../components/general/modal';
 import OrderSummary from '../../components/OrderSummary';
+import axios from '../../axios-orders';
+import Spinner from '../../components/general/spinner';
 
 const INGREDIENT_PRICE = { Salad: 200, Cheese: 300, Bacon: 500, Meat: 1000 };
 const INGREDIENT_NAMES = {
@@ -23,6 +25,7 @@ class BurgerBuilder extends Component {
         totalPrice: 1000,
         purchasing: false,
         confirmOrder: false,
+        loading: false,
     };
     showConfirmModal = () => {
         this.setState({ confirmOrder: true });
@@ -30,8 +33,20 @@ class BurgerBuilder extends Component {
     closeConfirmModal = () => {
         this.setState({ confirmOrder: false });
     };
+    componentDidMount = () => {};
     continueOrder = () => {
-        console.log('continiue dragala');
+        const params = [];
+        for (let orts in this.state.ingredients) {
+            params.push(orts + '=' + this.state.ingredients[orts]);
+        }
+        params.push('dun=' + this.state.totalPrice);
+        const query = params.join('&');
+        // console.log(query);
+        this.props.history.push({
+            pathname: '/ship',
+            search: query,
+        });
+        this.closeConfirmModal();
     };
     ortsNemeh = (type) => {
         const newingredients = { ...this.state.ingredients };
@@ -63,14 +78,19 @@ class BurgerBuilder extends Component {
         return (
             <div>
                 <Modal show={this.state.confirmOrder} hide={this.closeConfirmModal}>
-                    <OrderSummary
-                        onCancel={this.closeConfirmModal}
-                        onContinue={this.continueOrder}
-                        price={this.state.totalPrice}
-                        ingredientsNames={INGREDIENT_NAMES}
-                        ingredients={this.state.ingredients}
-                    />
+                    {this.state.loading ? (
+                        <Spinner />
+                    ) : (
+                        <OrderSummary
+                            onCancel={this.closeConfirmModal}
+                            onContinue={this.continueOrder}
+                            price={this.state.totalPrice}
+                            ingredientsNames={INGREDIENT_NAMES}
+                            ingredients={this.state.ingredients}
+                        />
+                    )}
                 </Modal>
+
                 <Burger orts={this.state.ingredients} />
                 <BuildControls
                     showConfirmModal={this.showConfirmModal}
