@@ -6,6 +6,7 @@ import OrderSummary from "../../components/OrderSummary";
 import axios from "../../axios-orders";
 import Spinner from "../../components/general/spinner";
 import { connect } from "react-redux";
+import * as action from '../../redux/actions/burgerActions'
 
 const INGREDIENT_PRICE = { Salad: 200, Cheese: 300, Bacon: 500, Meat: 1000 };
 const INGREDIENT_NAMES = {
@@ -37,10 +38,10 @@ class BurgerBuilder extends Component {
   componentDidMount = () => {};
   continueOrder = () => {
     const params = [];
-    for (let orts in this.state.ingredients) {
-      params.push(orts + "=" + this.state.ingredients[orts]);
+    for (let orts in this.props.burgeriinOrtsoo) {
+      params.push(orts + "=" + this.props.burgeriinOrtsoo[orts]);
     }
-    params.push("dun=" + this.state.totalPrice);
+    params.push("dun=" + this.props.niitUnee);
     const query = params.join("&");
     // console.log(query);
     this.props.history.push({
@@ -50,9 +51,9 @@ class BurgerBuilder extends Component {
     this.closeConfirmModal();
   };
   ortsNemeh = (type) => {
-    const newingredients = { ...this.state.ingredients };
+    const newingredients = { ...this.props.burgeriinOrtsoo };
     newingredients[type]++;
-    const newPrice = this.state.totalPrice + INGREDIENT_PRICE[type];
+    const newPrice = this.props.niitUnee + INGREDIENT_PRICE[type];
     this.setState({
       purchasing: true,
       ingredients: newingredients,
@@ -60,10 +61,10 @@ class BurgerBuilder extends Component {
     });
   };
   ortsHasah = (type) => {
-    if (this.state.ingredients[type] > 0) {
-      const newingredients = { ...this.state.ingredients };
+    if (this.props.burgeriinOrtsoo[type] > 0) {
+      const newingredients = { ...this.props.burgeriinOrtsoo };
       newingredients[type]--;
-      const newPrice = this.state.totalPrice - INGREDIENT_PRICE[type];
+      const newPrice = this.props.niitUnee - INGREDIENT_PRICE[type];
       this.setState({
         purchasing: newPrice > 1000,
         ingredients: newingredients,
@@ -73,7 +74,7 @@ class BurgerBuilder extends Component {
   };
   render() {
     console.log("burgerpage s props: ", this.props);
-    const disabledIngredients = { ...this.state.ingredients };
+    const disabledIngredients = { ...this.props.burgeriinOrtsoo };
     for (let key in disabledIngredients) {
       disabledIngredients[key] = disabledIngredients[key] <= 0;
     }
@@ -86,38 +87,38 @@ class BurgerBuilder extends Component {
             <OrderSummary
               onCancel={this.closeConfirmModal}
               onContinue={this.continueOrder}
-              price={this.state.totalPrice}
+              price={this.props.niitUnee}
               ingredientsNames={INGREDIENT_NAMES}
-              ingredients={this.state.ingredients}
+              ingredients={this.props.burgeriinOrtsoo}
             />
           )}
         </Modal>
 
-        <Burger orts={this.state.ingredients} />
+        <Burger orts={this.props.burgeriinOrtsoo} />
         <BuildControls
           showConfirmModal={this.showConfirmModal}
           ingredientsNames={INGREDIENT_NAMES}
           disabled={!this.state.purchasing}
-          price={this.state.totalPrice}
+          price={this.props.niitUnee}
           disabledIngredients={disabledIngredients}
-          ortsNemeh={this.ortsNemeh}
-          ortsHasah={this.ortsHasah}
+          ortsNemeh={this.props.ortsNem}
+          ortsHasah={this.props.ortsHas}
         />
       </div>
     );
   }
 }
-const s = (state) => {
+const mapStateToProps = (state) => {
   return {
     burgeriinOrtsoo: state.ingredients,
     niitUnee: state.totalPrice,
   };
 };
-const a = (dispatch) => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    ortsNem: (ortsNer) => dispatch({ type: "ADD_INGREDIENT" }),
-    ortsHas: (ortsNer) => dispatch({ type: "REMOVE_INGREDIENT" }),
+    ortsNem: (ortsNer) => dispatch(action.addIngredient(ortsNer)),
+    ortsHas: (ortsNer) => dispatch( action.removeIngredient(ortsNer)),
   };
 };
 
-export default connect(s, a)(BurgerBuilder);
+export default connect(mapStateToProps, mapDispatchToProps)(BurgerBuilder);

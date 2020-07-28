@@ -6,9 +6,9 @@ import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter } from "react-router-dom";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
-import reducer from "./redux/reducer/reducer";
+import burgerReducer from "./redux/reducer/burgerReducer";
 
-const store = createStore(reducer);
+const store = createStore(burgerReducer);
 
 ReactDOM.render(
   <Provider store={store}>
