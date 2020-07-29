@@ -8,7 +8,7 @@ import Spinner from "../../components/general/spinner";
 import { connect } from "react-redux";
 import * as action from '../../redux/actions/burgerActions'
 
-const INGREDIENT_PRICE = { Salad: 200, Cheese: 300, Bacon: 500, Meat: 1000 };
+
 const INGREDIENT_NAMES = {
   Bacon: "Гахайн мах",
   Cheese: "Бяслаг",
@@ -25,7 +25,7 @@ class BurgerBuilder extends Component {
       Meat: 0,
     },
     totalPrice: 1000,
-    purchasing: false,
+   
     confirmOrder: false,
     loading: false,
   };
@@ -35,7 +35,7 @@ class BurgerBuilder extends Component {
   closeConfirmModal = () => {
     this.setState({ confirmOrder: false });
   };
-  componentDidMount = () => {};
+
   continueOrder = () => {
     const params = [];
     for (let orts in this.props.burgeriinOrtsoo) {
@@ -50,30 +50,9 @@ class BurgerBuilder extends Component {
     });
     this.closeConfirmModal();
   };
-  ortsNemeh = (type) => {
-    const newingredients = { ...this.props.burgeriinOrtsoo };
-    newingredients[type]++;
-    const newPrice = this.props.niitUnee + INGREDIENT_PRICE[type];
-    this.setState({
-      purchasing: true,
-      ingredients: newingredients,
-      totalPrice: newPrice,
-    });
-  };
-  ortsHasah = (type) => {
-    if (this.props.burgeriinOrtsoo[type] > 0) {
-      const newingredients = { ...this.props.burgeriinOrtsoo };
-      newingredients[type]--;
-      const newPrice = this.props.niitUnee - INGREDIENT_PRICE[type];
-      this.setState({
-        purchasing: newPrice > 1000,
-        ingredients: newingredients,
-        totalPrice: newPrice,
-      });
-    }
-  };
+ 
   render() {
-    console.log("burgerpage s props: ", this.props);
+    // console.log("burgerpage s props: ", this.props);
     const disabledIngredients = { ...this.props.burgeriinOrtsoo };
     for (let key in disabledIngredients) {
       disabledIngredients[key] = disabledIngredients[key] <= 0;
@@ -98,7 +77,7 @@ class BurgerBuilder extends Component {
         <BuildControls
           showConfirmModal={this.showConfirmModal}
           ingredientsNames={INGREDIENT_NAMES}
-          disabled={!this.state.purchasing}
+          disabled={!this.props.purchasing}
           price={this.props.niitUnee}
           disabledIngredients={disabledIngredients}
           ortsNemeh={this.props.ortsNem}
@@ -112,6 +91,7 @@ const mapStateToProps = (state) => {
   return {
     burgeriinOrtsoo: state.ingredients,
     niitUnee: state.totalPrice,
+    purchasing: state.purchasing
   };
 };
 const mapDispatchToProps = (dispatch) => {
