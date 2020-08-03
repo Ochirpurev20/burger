@@ -4,22 +4,10 @@ import Burger from "../../components/Burger";
 import Button from "../../components/general/button";
 import { Route } from "react-router-dom";
 import ContactData from "../../components/ContactData";
+import { connect } from "react-redux";
 
 class ShippingPage extends Component {
-  state = {
-    ingredients: {},
-    price: 0,
-  };
-  componentDidMount() {
-    const query = new URLSearchParams(this.props.location.search);
-    const ingre = {};
-    let price;
-    for (let orts of query.entries()) {
-      if (orts[0] !== "dun") ingre[orts[0]] = orts[1];
-      else price = orts[1];
-    }
-    this.setState({ ingredients: ingre, price });
-  }
+  
   goBack = () => {
     this.props.history.goBack();
   };
@@ -30,9 +18,9 @@ class ShippingPage extends Component {
     return (
       <div className={css.ShippingPage}>
         <p>
-          <strong>Дүн: {this.state.price}</strong>
+          <strong>Дүн: {this.props.price}</strong>
         </p>
-        <Burger orts={this.state.ingredients} />
+        <Burger orts={this.props.ingredients} />
         <Button daragdsan={this.goBack} btnType="Danger" text="Буцах" />
         <Button
           daragdsan={this.showContact}
@@ -42,8 +30,6 @@ class ShippingPage extends Component {
         <Route path="/ship/contact">
           {" "}
           <ContactData
-            ingredients={this.state.ingredients}
-            price={this.state.price}
           />{" "}
         </Route>
       </div>
@@ -51,4 +37,10 @@ class ShippingPage extends Component {
   }
 }
 
-export default ShippingPage;
+const mapStateToProps = state => {
+  return {
+    price: state.totalPrice
+  }
+}
+
+export default connect(mapStateToProps)(ShippingPage);

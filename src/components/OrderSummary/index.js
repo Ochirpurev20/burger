@@ -1,4 +1,6 @@
 import React from 'react';
+import {connect } from 'react-redux'
+
 import Button from '../general/button';
 
 const OrderSummary = (props) => {
@@ -20,5 +22,12 @@ const OrderSummary = (props) => {
         </div>
     );
 };
+const mapStateToProps = state => {
+    return {
+        ingredients: state.ingredients,
+        ingredientsNames: state.ingredientNames,
+        price: state.totalPrice
+    }
+}
 
-export default OrderSummary;
+export default connect(mapStateToProps)(OrderSummary);
