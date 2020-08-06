@@ -4,8 +4,10 @@ import "./index.css";
 import App from "./pages/App";
 import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter } from "react-router-dom";
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, combineReducers } from "redux";
 import { Provider } from "react-redux";
+
+import orderReducer from './redux/reducer/orderReducer';
 import burgerReducer from "./redux/reducer/burgerReducer";
 
 const loggerMiddle = store => {
@@ -20,7 +22,15 @@ const loggerMiddle = store => {
     }
   }
 }
-const store = createStore(burgerReducer, applyMiddleware(loggerMiddle));
+
+const reducers = combineReducers({
+   burgerReducer,
+   orderReducer
+})
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ //|| compose;
+
+const store = createStore(reducers, composeEnhancers(applyMiddleware(loggerMiddle)));
 
 ReactDOM.render(
   <Provider store={store}>
