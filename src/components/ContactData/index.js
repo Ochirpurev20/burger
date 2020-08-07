@@ -5,14 +5,20 @@ import {connect} from 'react-redux'
 import axios from "../../axios-orders";
 import Spinner from "../general/spinner";
 import { withRouter } from "react-router-dom";
+import * as actions from '../../redux/actions/orderActions'
 
 class ContactData extends Component {
   state = {
     name: null,
     city: null,
-    street: null,
-    loading: false,
+    street: null,    
   };
+
+  componentDidUpdate(){
+    if(this.props.newOrderStatus.finished && !this.props.newOrderStatus.error){
+      this.props.history.replace("/orders");
+    }
+  }
   changeName = (e) => {
     this.setState({ name: e.target.value });
   };
@@ -32,26 +38,14 @@ class ContactData extends Component {
         street: this.state.street,
       },
     };
-    this.setState({ loading: true });
-    axios
-      .post("/orders.json", order)
-      .then((res) => {
-        console.log("amjilltai");
-      })
-      .catch((err) => {
-        console.log("amjiltgui" + err);
-      })
-      .finally(() => {
-        this.setState({ loading: false });
-        this.props.history.replace("/orders");
-      });
+  this.props.saveOrderAction(order)
   };
   render() {
     // console.log(this.props);
     return (
       <div className={css.ContactData}>
         Une:{this.props.price}
-        {this.state.loading ? (
+        {this.props.newOrderStatus.saving ? (
           <Spinner />
         ) : (
           <div>
@@ -88,8 +82,15 @@ class ContactData extends Component {
 const mapStateToProps = state => {
   return {
     price: state.burgerReducer.totalPrice,
-    ingredients: state.burgerReducer.ingredients
+    ingredients: state.burgerReducer.ingredients,
+    newOrderStatus: state.orderReducer.newOrder
   }
 }
 
-export default connect(mapStateToProps)(withRouter(ContactData));
+const mapDispatchToProps = dispatch => {
+  return {
+    saveOrderAction: (newOrder) => dispatch(actions.saveOrder(newOrder))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ContactData));

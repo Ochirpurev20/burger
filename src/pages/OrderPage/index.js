@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import css from './style.module.css';
-import axios from '../../axios-orders';
+// import css from './style.module.css';
 import Spinner from '../../components/general/spinner';
 import Order from '../../components/Order';
 import {connect} from 'react-redux'
@@ -13,20 +12,10 @@ class OrderPage extends Component {
     componentDidMount = () => {
         this.props.loadOrders()
     //     this.setState({ loading: true });
-    //     axios
-    //         .get('/orders.json')
-    //         .then((res) => {
-    //             this.setState({ orders: Object.entries(res.data).reverse() });
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //         })
-    //         .finally(() => {
-    //             this.setState({ loading: false });
-    //         });
+   
     };
     render() {
-        // console.log('====',JSON.stringify(this.state.orders));
+        // console.log('====',JSON.stringify(this.props));
         return <div>{this.props.loading ? <Spinner /> : this.props.orders.map((el) => <Order key={el[0]} order={el[1]} />)}</div>;
     }
 }
