@@ -10,6 +10,7 @@ import thunk from 'redux-thunk'
 
 import orderReducer from './redux/reducer/orderReducer';
 import burgerReducer from "./redux/reducer/burgerReducer";
+import signupLoginReducer from './redux/reducer/signupLoginReducer'
 
 const loggerMiddle = store => {
   return next => {
@@ -26,7 +27,8 @@ const loggerMiddle = store => {
 
 const reducers = combineReducers({
    burgerReducer,
-   orderReducer
+   orderReducer,
+   signupLoginReducer
 })
 
 const middlewares = [loggerMiddle, thunk]

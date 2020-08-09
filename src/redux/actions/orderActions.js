@@ -1,13 +1,13 @@
 import axios from '../../axios-orders';
 
-export const loadOrders = () => {    
+export const loadOrders = (userId) => {    
     return function(dispatch) { 
         //zahialgiig tataj ehellee gedgiig medegdene
         //eniig huleej avaad spinner ajillaj ehelne
         dispatch(loadOrdersStart())
 
              axios
-            .get('/orders.json')
+            .get(`orders.json?orderBy="userId"&equalTo="${userId}"`)
             .then((res) => {
                 dispatch(loadOrdersSuccess(Object.entries(res.data).reverse() )) 
                 // this.setState({ orders: Object.entries(res.data).reverse() });

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import css from "./style.module.css";
 import Button from "../general/button";
 import {connect} from 'react-redux'
-import axios from "../../axios-orders";
 import Spinner from "../general/spinner";
 import { withRouter } from "react-router-dom";
 import * as actions from '../../redux/actions/orderActions'
@@ -30,6 +29,7 @@ class ContactData extends Component {
   };
   SaveContact = () => {
     const order = {
+      userId: this.props.userId,
       orts: this.props.ingredients,
       dun: this.props.price,
       hayag: {
@@ -83,7 +83,8 @@ const mapStateToProps = state => {
   return {
     price: state.burgerReducer.totalPrice,
     ingredients: state.burgerReducer.ingredients,
-    newOrderStatus: state.orderReducer.newOrder
+    newOrderStatus: state.orderReducer.newOrder,
+    userId: state.signupLoginReducer.userId
   }
 }
 

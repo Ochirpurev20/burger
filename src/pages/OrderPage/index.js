@@ -10,7 +10,7 @@ class OrderPage extends Component {
     
 
     componentDidMount = () => {
-        this.props.loadOrders()
+        this.props.loadOrders(this.props.userId)
     //     this.setState({ loading: true });
    
     };
@@ -22,13 +22,14 @@ class OrderPage extends Component {
 const mapStateToProps = state => {
     return {
       orders: state.orderReducer.orders,
-      loading: state.orderReducer.loading
+      loading: state.orderReducer.loading,
+      userId: state.signupLoginReducer.userId
     }
   }
 
 const mapDispatchToProps = dispatch => {
     return {
-        loadOrders: () => dispatch(actions.loadOrders())
+        loadOrders: (ui) => dispatch(actions.loadOrders(ui))
     }
 }
 
