@@ -7,7 +7,7 @@ export const loginUser = (email, password) => {
         const data = {
             email,
             password,
-            returnSecureToker: true
+            returnSecureToken: true
         }
 
         axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA9WRHr4-PGvFf6QvWIRxP0K9kC0T6Jvt0', 

@@ -1,13 +1,14 @@
 import axios from '../../axios-orders';
 
 export const loadOrders = (userId) => {    
-    return function(dispatch) { 
+    return function(dispatch, getState) { 
         //zahialgiig tataj ehellee gedgiig medegdene
         //eniig huleej avaad spinner ajillaj ehelne
         dispatch(loadOrdersStart())
+        const token = getState().signupLoginReducer.token
 
              axios
-            .get(`orders.json?orderBy="userId"&equalTo="${userId}"`)
+            .get(`orders.json?auth=${token}&orderBy="userId"&equalTo="${userId}"`)
             .then((res) => {
                 dispatch(loadOrdersSuccess(Object.entries(res.data).reverse() )) 
                 // this.setState({ orders: Object.entries(res.data).reverse() });
@@ -39,11 +40,12 @@ export const loadOrdersError = (error) => {
 }
 
 export const saveOrder = (newOrder) => {
-    return function(dispatch) {
+    return function(dispatch, getState) {
         dispatch(saveOrderStart())
 
+        const token = getState().signupLoginReducer.token
         axios
-        .post("/orders.json", newOrder)
+        .post(`/orders.json?auth=${token}`, newOrder)
         .then((res) => {
             dispatch(saveOrderSuccess())            
         })
