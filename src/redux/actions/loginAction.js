@@ -1,4 +1,5 @@
 import axios from "axios";
+import * as actions from "./signupActions";
 
 export const loginUser = (email, password) => {
   return function (dispatch) {
@@ -18,10 +19,17 @@ export const loginUser = (email, password) => {
       .then((res) => {
         const token = res.data.idToken;
         const userId = res.data.localId;
+        const expiresIn = res.data.expiresIn;
+        const expireDate = new Date(new Date().getTime() + expiresIn * 1000);
+        const refreshToken = res.data.refreshToken;
 
         localStorage.setItem("token", token);
         localStorage.setItem("userId", userId);
+        localStorage.setItem("expireDate", expireDate);
+        localStorage.setItem("refreshToken", refreshToken);
+
         dispatch(loginUserSuccess(token, userId));
+        dispatch(actions.autoLogoutAfterMillisec(expiresIn * 1000));
       })
       .catch((err) => {
         dispatch(loginUserError(err));

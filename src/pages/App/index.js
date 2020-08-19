@@ -12,6 +12,7 @@ import SignupPage from "../signupPage";
 import Logout from "../../components/Logout";
 import { Redirect } from "react-router-dom";
 import * as actions from "../../redux/actions/loginAction";
+import * as signupActions from "../../redux/actions/signupActions";
 
 class App extends Component {
   state = {
@@ -26,8 +27,18 @@ class App extends Component {
   componentDidMount = () => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
+    const expireDate = new Date(localStorage.getItem("expireDate"));
+    const refreshToken = localStorage.getItem("refreshToken");
+
     if (token) {
-      this.props.autoLogin(token, userId);
+      if (expireDate > new Date()) {
+        this.props.autoLogin(token, userId);
+        this.props.autoLogoutAfterMillisec(
+          expireDate.getTime() - new Date().getTime()
+        );
+      } else {
+        this.props.logout();
+      }
     }
   };
   render() {
@@ -71,6 +82,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     autoLogin: (token, userId) =>
       dispatch(actions.loginUserSuccess(token, userId)),
+    logout: () => dispatch(signupActions.logout()),
+    autoLogoutAfterMillisec: () =>
+      dispatch(signupActions.autoLogoutAfterMillisec()),
   };
 };
 
